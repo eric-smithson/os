@@ -1,6 +1,8 @@
 #include <stdio.h>
 #include <stdlib.h>
 #include <string.h>
+#include "fcfs.h"
+
 typedef struct process
 {
 	char* name;
@@ -36,8 +38,8 @@ int main(void)
 	printf("time unit = %d\n",timeUnit);
 	if(fgets(buffer,sizeof buffer,fp) != NULL)
 	{
-		token = strtok(buffer," ");
 
+		token = strtok(buffer," ");
 		typeOfScheduler = (strtok(NULL," "));
 
 	}
@@ -63,5 +65,6 @@ int main(void)
 		}
 		printf("process name: %s arrival: %d burst: %d\n", processes[i].name,processes[i].arrival,processes[i].burst);
 	}
-
+	free(processes);
+	enqueue("Iam inside fcfs.c");
 }
