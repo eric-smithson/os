@@ -3,13 +3,7 @@
 #include <string.h>
 #include "fcfs.h"
 
-typedef struct process
-{
-	char* name;
-	int arrival;
-	int burst;
 
-}Process;
 int main(void)
 {
 	Process* processes;
@@ -63,8 +57,9 @@ int main(void)
 			processes[i].burst = atoi(strtok(NULL," "));
 
 		}
-		printf("process name: %s arrival: %d burst: %d\n", processes[i].name,processes[i].arrival,processes[i].burst);
+		// printf("process name: %s arrival: %d burst: %d\n", processes[i].name,processes[i].arrival,processes[i].burst);
 	}
-	free(processes);
-	enqueue("Iam inside fcfs.c");
+	enqueue(processes);
+		free(processes);
+
 }

@@ -1,7 +1,7 @@
 #include <stdio.h>
 #include "fcfs.h"
 
-void enqueue(char* test)
+void enqueue(Process* test)
 {
-	printf("%s\n",test);
+	printf("%s\n",test[0].name);
 }
