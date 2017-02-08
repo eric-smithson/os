@@ -1,3 +1,10 @@
-os: assgn1.c
-	gcc assgn1.c
+os: assgn1.o rr.o
+	gcc assgn1.o rr.o
+
+
+
+
+
+
+    
 

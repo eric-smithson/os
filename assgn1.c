@@ -1,13 +1,7 @@
 #include <stdio.h>
 #include <stdlib.h>
 #include <string.h>
-typedef struct process
-{
-	char* name;
-	int arrival;
-	int burst;
 
-}Process;
 int main(void)
 {
 	Process* processes;
@@ -28,6 +22,7 @@ int main(void)
 		numberOfProcesses = atoi(strtok(NULL," "));
 	}
 	processes = malloc(sizeof(Process) * numberOfProcesses);
+	printf("%d processes\n", numberOfProcesses);
 	if(fgets(buffer,sizeof buffer,fp) !=NULL)
 	{
 		token = strtok(buffer," ");
@@ -41,13 +36,13 @@ int main(void)
 		typeOfScheduler = (strtok(NULL," "));
 
 	}
-	printf("type of scheduler: %s\n",typeOfScheduler);
+	printf("Using %s\n",typeOfScheduler);
 	if(fgets(buffer,sizeof buffer,fp) != NULL)
 	{
 		token = strtok(buffer," ");
 		timeQuantum = atoi(strtok(NULL," "));
 	}
-	printf("time quantum = %d\n", timeQuantum);
+	printf("Quantum %d\n", timeQuantum);	
 	for(i = 0; i < numberOfProcesses;i++)
 	{
 		if(fgets(buffer,sizeof buffer,fp) != NULL)
@@ -65,3 +60,5 @@ int main(void)
 	}
 
 }
+
+
