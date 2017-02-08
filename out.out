@@ -1,0 +1,77 @@
+total Run Time = 30
+address of temp: 0xbf8e5d11 adress of typeOfScheduler = 0x813a1a8
+type of scheduler: fcfs
+time quantum = 2
+process name: P1 arrival: 0 burst: 24
+process name: P2 arrival: 3 burst: 3
+process name: P3 arrival: 4 burst: 3
+size of process array in main: 4
+enqueue sucess
+enqueue sucess
+enqueue sucess
+time = 0
+process: P1 , process address time: 24
+time = 1
+process: P1 , process address time: 23
+time = 2
+process: P1 , process address time: 22
+time = 3
+process: P1 , process address time: 21
+time = 4
+process: P1 , process address time: 20
+time = 5
+process: P1 , process address time: 19
+time = 6
+process: P1 , process address time: 18
+time = 7
+process: P1 , process address time: 17
+time = 8
+process: P1 , process address time: 16
+time = 9
+process: P1 , process address time: 15
+time = 10
+process: P1 , process address time: 14
+time = 11
+process: P1 , process address time: 13
+time = 12
+process: P1 , process address time: 12
+time = 13
+process: P1 , process address time: 11
+time = 14
+process: P1 , process address time: 10
+time = 15
+process: P1 , process address time: 9
+time = 16
+process: P1 , process address time: 8
+time = 17
+process: P1 , process address time: 7
+time = 18
+process: P1 , process address time: 6
+time = 19
+process: P1 , process address time: 5
+time = 20
+process: P1 , process address time: 4
+time = 21
+process: P1 , process address time: 3
+time = 22
+process: P1 , process address time: 2
+time = 23
+process: P1 , process address time: 1
+time = 24
+process: P1 , process address time: 0
+dequeued
+time = 25
+process: P2 , process address time: 2
+time = 26
+process: P2 , process address time: 1
+time = 27
+process: P2 , process address time: 0
+dequeued
+time = 28
+process: P3 , process address time: 2
+time = 29
+process: P3 , process address time: 1
+time = 30
+process: P3 , process address time: 0
+emptied queue
+dequeued

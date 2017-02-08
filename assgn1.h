@@ -8,8 +8,9 @@ typedef struct process
 }Process;
 Process* front;
 Process* rear;
+Process* temp;
 void enqueue(Process* test);
-void runFcfs(Process* processArray,int sizeOfProcessArray);
+void runFcfs(Process* processArray,int sizeOfProcessArray,int totalRunTime);
 void test();
-void deque();
+void dequeue();
 char isEmpty();
