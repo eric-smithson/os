@@ -1,9 +1,10 @@
-os: assgn1.o fcfs.o
-	gcc assgn1.o fcfs.o
+os: assgn1.o fcfs.o test.o
+	gcc assgn1.o fcfs.o test.o
 
-assgn1.o: assgn1.c fcfs.h
+assgn1.o: assgn1.c assgn1.h
 	gcc -c assgn1.c
 
-fcfs.o: fcfs.c fcfs.h
+fcfs.o: fcfs.c 
 	gcc -c fcfs.c
 
+test.0: test.c

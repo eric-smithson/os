@@ -1,8 +1,7 @@
 #include <stdio.h>
 #include <stdlib.h>
 #include <string.h>
-#include "fcfs.h"
-
+#include "assgn1.h"
 
 int main(void)
 {
@@ -60,6 +59,7 @@ int main(void)
 		// printf("process name: %s arrival: %d burst: %d\n", processes[i].name,processes[i].arrival,processes[i].burst);
 	}
 	enqueue(processes);
+	test();
 		free(processes);
 
 }

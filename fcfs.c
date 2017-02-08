@@ -1,5 +1,5 @@
 #include <stdio.h>
-#include "fcfs.h"
+#include "assgn1.h"
 
 void enqueue(Process* test)
 {
