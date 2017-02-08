@@ -18,9 +18,14 @@ void runFcfs(Process* processArray,int sizeOfProcessArray)
 	}
 	printf("After\n");
 	printf("Name: %s, arrival: %d, burst: %d\n",
-			(rear)->name,
-			(rear)->arrival,
-			(rear)->burst);
+			(front)->name,
+			(front)->arrival,
+			(front)->burst);
+	dequeue();
+		printf("Name: %s, arrival: %d, burst: %d\n",
+			(front)->name,
+			(front)->arrival,
+			(front)->burst);
 }
 void enqueue(Process* process)
 {
@@ -55,11 +60,19 @@ void dequeue()
 	if(front == rear)
 	{
 		front = rear = NULL;
+		printf("emptied queue\n");
 	}
 	else
 	{
 		front = front->nextNode;
+		printf("dequeued\n");
 	}
 	free(temp->name);
 	free(temp);
+}
+char isEmpty()
+{
+	if(front == NULL && front == NULL)
+		return '1';
+	else return '0';
 }

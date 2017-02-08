@@ -91,11 +91,12 @@ int main(void)
 		exit(0);
 	}
 	free(typeOfScheduler);
-	for( i = 0; i < numberOfProcesses;i ++)
-	{
-		free((processes+i)->name);
-	}
-	free(processes);
+	// for( i = 0; i < numberOfProcesses;i ++)
+	// {
+	// 	if((processes+i) != NULL)
+	// 		free((processes+i)->name);
+	// }
+	// free(processes);
 
 
 }
