@@ -17,5 +17,5 @@ void runFcfs(Process* processArray,int sizeOfProcessArray,int totalRunTime);
 void test();
 void dequeue();
 char isEmpty();
-
+int compare_arrival(const void *a, const void *b);
 void runRoundRobin(Process* processArray,int sizeOfProcessArray,int totalRunTime,int quantum);

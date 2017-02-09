@@ -13,7 +13,7 @@ int main(void)
 	int numberOfProcesses;
 	char* typeOfScheduler;
 	int totalRunTime;
-	fp = fopen("./set2_process.in","r");
+	fp = fopen("./set1_process.in","r");
 	int lineNumber = 0;
 	int timeQuantum;
 	char** inputStrings;
@@ -69,7 +69,7 @@ int main(void)
 		}
 	}
 
-
+	qsort(processes, numberOfProcesses, sizeof(Process), compare_arrival);
 	if(strcmp(typeOfScheduler,"fcfs") == 0)
 	{
 		//printf("in assgn1 main else if statments\n");
@@ -86,7 +86,7 @@ int main(void)
 	}
 	else
 	{
-		printf("unrecognized task exiting....");
+		printf("unrecognized task, exiting....");
 		free(typeOfScheduler);
 		for(i = 0 ; i < numberOfProcesses;i++)
 		{
