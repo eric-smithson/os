@@ -105,7 +105,7 @@ void dequeue()
 	temp = front;
 	if(temp == NULL)
 	{
-		printf("Queue is empty\n");
+		//printf("Queue is empty\n");
 		return;
 	}
 	if(temp->nextNode == NULL)
@@ -124,6 +124,7 @@ void dequeue()
 		free(front->name);
 		free(front);
 		front = temp;
+		//printf("sucessful dequeue\n");
 
 	}
 

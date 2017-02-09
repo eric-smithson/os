@@ -3,6 +3,7 @@
 #include <string.h>
 #include "assgn1.h"
 
+
 int main(void)
 {
 	Process *processes;
@@ -22,6 +23,7 @@ int main(void)
 		token = strtok(buffer," ");
 		numberOfProcesses = atoi(strtok(NULL," "));
 	}
+
 	processes = malloc(numberOfProcesses * sizeof *processes);
 
 	if(fgets(buffer,sizeof buffer,fp) !=NULL)
@@ -38,11 +40,18 @@ int main(void)
 		strcpy(typeOfScheduler,temp);
 
 	}
+
+	//printf("Using %s\n",typeOfScheduler);
+
 	if(fgets(buffer,sizeof buffer,fp) != NULL)
 	{
 		token = strtok(buffer," ");
 		timeQuantum = atoi(strtok(NULL," "));
 	}
+
+	//printf("Quantum %d\n", timeQuantum);	
+
+
 	for(i = 0; i < numberOfProcesses;i++)
 	{
 		if(fgets(buffer,sizeof buffer,fp) != NULL)
@@ -60,11 +69,10 @@ int main(void)
 		}
 	}
 
-	// printf("typeOfScheduler = %s\n", typeOfScheduler); // DEBUG
-
+	qsort(processes, numberOfProcesses, sizeof(Process), compare_arrival);
 	if(strcmp(typeOfScheduler,"fcfs") == 0)
 	{
-		printf("running fcfs\n"); // DEBUG
+		//printf("in assgn1 main else if statments\n");
 		runFcfs(processes,numberOfProcesses,totalRunTime);
 	}
 	else if(strcmp(typeOfScheduler,"sjf") == 0)
@@ -74,12 +82,12 @@ int main(void)
 	}
 	else if(strcmp(typeOfScheduler,"rr") == 0)
 	{
-		//call round robin here
-		printf("running rr:\n"); // DEBUG
+		//printf("in assgn1 main else if statments\n");
+		runRoundRobin(processes,numberOfProcesses,totalRunTime,timeQuantum);
 	}
 	else
 	{
-		printf("unrecognized task exiting....\n");
+		printf("unrecognized task, exiting....");
 		free(typeOfScheduler);
 		for(i = 0 ; i < numberOfProcesses;i++)
 		{
@@ -90,3 +98,5 @@ int main(void)
 	}
 	free(typeOfScheduler);
 }
+
+
