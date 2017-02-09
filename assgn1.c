@@ -13,7 +13,7 @@ int main(void)
 	int numberOfProcesses;
 	char* typeOfScheduler;
 	int totalRunTime;
-	fp = fopen("./set1_process.in","r");
+	fp = fopen("./set2_process.in","r");
 	int lineNumber = 0;
 	int timeQuantum;
 	char** inputStrings;
@@ -41,7 +41,7 @@ int main(void)
 
 	}
 
-	printf("Using %s\n",typeOfScheduler);
+	//printf("Using %s\n",typeOfScheduler);
 
 	if(fgets(buffer,sizeof buffer,fp) != NULL)
 	{
@@ -49,7 +49,7 @@ int main(void)
 		timeQuantum = atoi(strtok(NULL," "));
 	}
 
-	printf("Quantum %d\n", timeQuantum);	
+	//printf("Quantum %d\n", timeQuantum);	
 
 
 	for(i = 0; i < numberOfProcesses;i++)
@@ -72,16 +72,17 @@ int main(void)
 
 	if(strcmp(typeOfScheduler,"fcfs") == 0)
 	{
-
+		//printf("in assgn1 main else if statments\n");
 		runFcfs(processes,numberOfProcesses,totalRunTime);
 	}
-	else if(strcmp(typeOfScheduler,"sjf"))
+	else if(strcmp(typeOfScheduler,"sjf") == 0)
 	{
 		//call shortest job first here
 	}
-	else if(strcmp(typeOfScheduler,"rr"))
+	else if(strcmp(typeOfScheduler,"rr") == 0)
 	{
-		//call round robin here
+		//printf("in assgn1 main else if statments\n");
+		runRoundRobin(processes,numberOfProcesses,totalRunTime,timeQuantum);
 	}
 	else
 	{

@@ -8,3 +8,6 @@ fcfs.o: fcfs.c
 	gcc -c fcfs.c
 
 test.0: test.c
+
+rr.o: rr.c
+	gcc -c rr.c	
