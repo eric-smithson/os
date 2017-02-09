@@ -1,56 +1,70 @@
 #include <stdio.h>
 #include <stdlib.h>
 #include <string.h>
+#include "assgn1.h"
 
-// priority queue enqueue
+// priority queue priorityEnqueue
 // params: Process
-// returns: fol Process
+// returns: front Process
 
-Process enqueue(Process* processToInsert, Process* fol)
+void priorityEnqueue(Process* process)
 {
 	if(process == NULL)
 		return;
 
-	if(fol == NULL) {
+	Process *processToInsert = malloc(sizeof(Process));
+	processToInsert -> name = malloc(sizeof(process -> name));
+	strcpy(processToInsert -> name,process -> name);
+	processToInsert -> arrival = process -> arrival;
+	processToInsert -> burst = process -> burst;
+	processToInsert -> nextNode = NULL;
+	process -> nextNode = NULL;
+
+	if(front == NULL) {
 		// queue hasn't been initiated, so we start it here
-		fol = processToInsert;
-		return fol;
+		front = processToInsert;
+		return;
 	}
 
-	if(fol.burst > processToInsert.burst) {
-		processToInsert.next = fol;
-		return processToInsert;
+	if(front -> burst > processToInsert -> burst) {
+		processToInsert -> nextNode = front;
+		front = processToInsert;
+		return;
 	}
 
-	currentProcess = fol;
-	while(currentProcess.next != NULL) {
-		if(currentProcess.next.burst < processToInsert.burst) {
-			currentProcess = currentProcess.next;
+	Process* currentProcess = front;
+
+	while(currentProcess -> nextNode != NULL) {
+		if(currentProcess -> nextNode -> burst < processToInsert -> burst) {
+			currentProcess = currentProcess -> nextNode;
 			continue;
 		} else {
-			// at this point currentProcess.next.burst > processToInsert.burst
-			processToInsert.next = currentProcess.next;
-			currentProcess.next = processToInsert;
-			return fol;
+			processToInsert -> nextNode = currentProcess -> nextNode;
+			currentProcess -> nextNode = processToInsert;
+			return;
 		}
 	}
-	return NULL;
+
+	// the only way we'll get here is if we get to the end of the queue.
+	currentProcess -> nextNode = processToInsert;
+
+	return;
 }
 
-// priority queue dequeue
+// priority queue priorityDequeue
 // params: none
 // returns: A Process if there is one, else NULL
-Process dequeue(Process* fol) {
+void priorityDequeue(Process* front) {
 	
-	if(fol == NULL)
-		return NULL;
-	if(fol.next == NULL)
-		return fol;
+	if(front == NULL)
+		return;
+	if(front -> nextNode == NULL)
+		return;
 	
-	Process* temp = fol;
-	fol = fol.next;
+	Process* processToInsert = front;
+	front = front -> nextNode;
 
-	return temp;
+	return;
 }
 
 // scans through all the processes we have and sees if one enters this cycle
@@ -59,41 +73,47 @@ Process dequeue(Process* fol) {
 // params: Process*, numberOfProcesses, runFor
 // returns: nothing, should do all printing of output in this file
 
+Process* findNewProcess(Process* processes, int numberOfProcesses, int cycle){
+	int i;
+	for(i = 0; i < numberOfProcesses; i++) {
+		if(processes[i].arrival == cycle)
+			return &processes[i];
+	}
+	return NULL;
+}
+
 void sjf(Process* processes, int numberOfProcesses, int runFor) {
-
 	int i, j, cycle;
-
-	Process current = NULL;
 	int processesEntered = 0;
-	Process* fol = NULL; // fol = front of line
+	Process* processToInsert;
+	front = processToInsert = NULL; // front = front of line
+
+	printf("%s\n",processes[0].name);
 
 	for(cycle = 0; cycle < runFor; cycle++) {
 		// every cycle it needs to:
 			// check if there are new processes which need to be put in the queue
 				// if there are new processes, make a check to see if the newest process has a shorter burst time
 				// allow the process with the shortest burst left to take a turn
-			// When dequeing, you take out the Process, and enqueue it when you need to switch out (with burst time adjusted)
+			// When dequeing, you take out the Process, and priorityEnqueue it when you need to switch out (with burst time adjusted)
 
-		// if there is there are no processes left (dequeue should return null), should print idle cycles
+		// if there is there are no processes left (priorityDequeue should return null), should print idle cycles
 
-		// looks for a new process entry
 		if(processesEntered < numberOfProcesses) {
-			fol = enqueue(findNewProcess(processes, numberOfProcesses, cycle), fol)
-			processesEntered++;
-		}
-
-		if(current == NULL) {
-			current = dequeue(fol);
-			if(current == NULL) {
-				printf("idle cycle\n");
-				continue;
+			// looks for a new process entry
+			processToInsert = findNewProcess(processes, numberOfProcesses, cycle);
+			if(processToInsert != NULL) {
+				// updates front
+				priorityEnqueue(processToInsert);
+				processesEntered++;
 			}
 		}
-	}
+		if(front == NULL) {
+			printf("idle cycle\n");
+			continue;
+		}
 
-	// for(i = 0; i < numberOfProcesses; i++) {
-	// 	process = processes[i]
-	// 	enqueue(process)
-	// }
+		(front -> burst)--;
+	}
 	return;
 }
