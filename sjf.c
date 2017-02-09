@@ -54,15 +54,19 @@ void priorityEnqueue(Process* process)
 // priority queue priorityDequeue
 // params: none
 // returns: A Process if there is one, else NULL
-void priorityDequeue(Process* front) {
+void priorityDequeue() {
 	
 	if(front == NULL)
 		return;
-	if(front -> nextNode == NULL)
+	if(front -> nextNode == NULL){
+		free(front);
+		front = NULL;
 		return;
-	
-	Process* processToInsert = front;
+	}
+	// Process* processToInsert = front;
+	temp = front;
 	front = front -> nextNode;
+	free(temp);
 
 	return;
 }
@@ -73,7 +77,7 @@ void priorityDequeue(Process* front) {
 // params: Process*, numberOfProcesses, runFor
 // returns: nothing, should do all printing of output in this file
 
-Process* findNewProcess(Process* processes, int numberOfProcesses, int cycle){
+Process* findNewProcess(Process* processes, int numberOfProcesses, int cycle) {
 	int i;
 	for(i = 0; i < numberOfProcesses; i++) {
 		if(processes[i].arrival == cycle)
@@ -82,38 +86,70 @@ Process* findNewProcess(Process* processes, int numberOfProcesses, int cycle){
 	return NULL;
 }
 
+void printqueue() {
+	if(front == NULL)
+		return;
+
+	Process* runner = front;
+
+	while(runner != NULL){
+		printf("%s: %d -> ", runner -> name, runner -> burst);
+		runner = runner -> nextNode;
+	}
+	printf("\n");
+}
+
 void sjf(Process* processes, int numberOfProcesses, int runFor) {
 	int i, j, cycle;
 	int processesEntered = 0;
 	Process* processToInsert;
 	front = processToInsert = NULL; // front = front of line
 
-	printf("%s\n",processes[0].name);
+	// printf("DEBUG: %d\n", processes[0].burst); // DEBUG
+
+	// runFor = 20;
+	printf("%d processes\n", numberOfProcesses);
+	printf("Using Shortest Job First (Pre)\n\n");
 
 	for(cycle = 0; cycle < runFor; cycle++) {
-		// every cycle it needs to:
-			// check if there are new processes which need to be put in the queue
-				// if there are new processes, make a check to see if the newest process has a shorter burst time
-				// allow the process with the shortest burst left to take a turn
-			// When dequeing, you take out the Process, and priorityEnqueue it when you need to switch out (with burst time adjusted)
-
+		
 		// if there is there are no processes left (priorityDequeue should return null), should print idle cycles
-
 		if(processesEntered < numberOfProcesses) {
 			// looks for a new process entry
 			processToInsert = findNewProcess(processes, numberOfProcesses, cycle);
 			if(processToInsert != NULL) {
-				// updates front
+				// updates queue
+				printf("Time %d: %s arrived\n", cycle, processToInsert -> name);
 				priorityEnqueue(processToInsert);
+				if(strcmp(front -> name, processToInsert -> name) == 0){
+					printf("Time %d: %s selected (burst %d)\n", cycle, front -> name, front -> burst);
+				}
 				processesEntered++;
 			}
 		}
+		// printqueue(); // DEBUG
 		if(front == NULL) {
-			printf("idle cycle\n");
+			printf("Time %d: IDLE\n", cycle);
 			continue;
 		}
+		if(front -> burst == 0){
+			printf("Time %d: %s finished\n", cycle, front -> name);
+			priorityDequeue();
+			if(front != NULL)
+				printf("Time %d: %s selected (burst %d)\n", cycle, front -> name, front -> burst);
+		}
+		
+		if(front == NULL) {
+			printf("Time %d: IDLE\n", cycle);
+			continue;
+		}
+		// printf("blah\n");
+
+		// printf("front -> name = %s, front -> burst = %d\n", front -> name, front -> burst);
 
 		(front -> burst)--;
 	}
+	char* finished = front == NULL ? "Finished": "Not finished";
+	printf("%s at time %d\n", finished, cycle);
 	return;
 }

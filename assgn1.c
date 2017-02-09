@@ -12,7 +12,7 @@ int main(void)
 	int numberOfProcesses;
 	char* typeOfScheduler;
 	int totalRunTime;
-	fp = fopen("./set1_process.in","r");
+	fp = fopen("./set4_process.in","r");
 	int lineNumber = 0;
 	int timeQuantum;
 	char** inputStrings;
@@ -60,23 +60,26 @@ int main(void)
 		}
 	}
 
+	// printf("typeOfScheduler = %s\n", typeOfScheduler); // DEBUG
 
 	if(strcmp(typeOfScheduler,"fcfs") == 0)
 	{
-
+		printf("running fcfs\n"); // DEBUG
 		runFcfs(processes,numberOfProcesses,totalRunTime);
 	}
-	else if(strcmp(typeOfScheduler,"sjf"))
+	else if(strcmp(typeOfScheduler,"sjf") == 0)
 	{
-		//call shortest job first here
+		printf("running sjf:\n"); // DEBUG
+		sjf(processes,numberOfProcesses,totalRunTime);
 	}
-	else if(strcmp(typeOfScheduler,"rr"))
+	else if(strcmp(typeOfScheduler,"rr") == 0)
 	{
 		//call round robin here
+		printf("running rr:\n"); // DEBUG
 	}
 	else
 	{
-		printf("unrecognized task exiting....");
+		printf("unrecognized task exiting....\n");
 		free(typeOfScheduler);
 		for(i = 0 ; i < numberOfProcesses;i++)
 		{
@@ -86,7 +89,4 @@ int main(void)
 		exit(0);
 	}
 	free(typeOfScheduler);
-
-
-
 }
