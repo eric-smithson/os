@@ -13,7 +13,7 @@ int main(void)
 	int numberOfProcesses;
 	char* typeOfScheduler;
 	int totalRunTime;
-	fp = fopen("./set2_process.in","r");
+	fp = fopen("./processes.in","r");
 	int lineNumber = 0;
 	int timeQuantum;
 	char** inputStrings;
