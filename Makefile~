@@ -1,5 +1,5 @@
 os: assgn1.o fcfs.o test.o sjf.o rr.o
-	gcc assgn1.o fcfs.o test.o sjf.o rr.o
+	gcc assgn1.o fcfs.o test.o sjf.o rr.o -o processes.out
 
 assgn1.o: assgn1.c assgn1.h
 	gcc -c assgn1.c
