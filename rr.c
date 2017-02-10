@@ -138,7 +138,10 @@ void runRoundRobin(Process* processArray,int sizeOfProcessArray,int totalRunTime
 				if(current == front)
 					dequeue();
 				else
+				{
 					dequeueRoundRobin(current);
+
+				}
 
 				quantum_counter = quantum; // move to next process
 			}
@@ -156,16 +159,22 @@ void runRoundRobin(Process* processArray,int sizeOfProcessArray,int totalRunTime
 
 			if(current->burst > 0)
 			{
+				if(quantum_counter == 0)
+				{
+					printf("Time %d: %s selected (burst %d)\n",time,current->name,current->burst);
+				}
 				quantum_counter++;
-				printf("Time %d: %s selected (burst %d)\n",time,current->name,current->burst);
+				// printf("Time %d: %s selected (burst %d)\n",time,current->name,current->burst);
 				current->burst--;
 			}	
 
-			// if the queue is empty
-			if(isEmpty() == 1)
-				printf("Time %d: IDLE\n",time);	
+		}	
+		
+		// if the queue is empty
+		if(isEmpty() == 1)
+			printf("Time %d: IDLE\n",time);	
 
-		}
+		
 
 	} // end of task scheduling for loop
 
