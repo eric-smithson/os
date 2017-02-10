@@ -17,6 +17,7 @@ void priorityEnqueue(Process* process)
 	strcpy(processToInsert -> name,process -> name);
 	processToInsert -> arrival = process -> arrival;
 	processToInsert -> burst = process -> burst;
+	processToInsert -> index = process -> index;
 	processToInsert -> nextNode = NULL;
 	process -> nextNode = NULL;
 
@@ -32,21 +33,21 @@ void priorityEnqueue(Process* process)
 		return;
 	}
 
-	Process* currentProcess = front;
+	Process* processRunner = front;
 
-	while(currentProcess -> nextNode != NULL) {
-		if(currentProcess -> nextNode -> burst < processToInsert -> burst) {
-			currentProcess = currentProcess -> nextNode;
+	while(processRunner -> nextNode != NULL) {
+		if(processRunner -> nextNode -> burst < processToInsert -> burst) {
+			processRunner = processRunner -> nextNode;
 			continue;
 		} else {
-			processToInsert -> nextNode = currentProcess -> nextNode;
-			currentProcess -> nextNode = processToInsert;
+			processToInsert -> nextNode = processRunner -> nextNode;
+			processRunner -> nextNode = processToInsert;
 			return;
 		}
 	}
 
 	// the only way we'll get here is if we get to the end of the queue.
-	currentProcess -> nextNode = processToInsert;
+	processRunner -> nextNode = processToInsert;
 
 	return;
 }
@@ -100,16 +101,26 @@ void printqueue() {
 }
 
 void sjf(Process* processes, int numberOfProcesses, int runFor) {
-	int i, j, cycle;
+	int cycle, wait_time, turnaround_time, i, j;
 	int processesEntered = 0;
+	int arrival_time[numberOfProcesses], finished_time[numberOfProcesses];
 	Process* processToInsert;
 	front = processToInsert = NULL; // front = front of line
+	char* finished;
 
 	// printf("DEBUG: %d\n", processes[0].burst); // DEBUG
 
 	// runFor = 20;
 	printf("%d processes\n", numberOfProcesses);
 	printf("Using Shortest Job First (Pre)\n\n");
+
+	for(i = 0; i < numberOfProcesses;i++) {
+		arrival_time[i] = -1;
+		finished_time[i] = -1;
+		// index in process struct will coorespond to arrival time/finish time arrays
+		processes[i].index = i;
+	}
+
 
 	for(cycle = 0; cycle < runFor; cycle++) {
 		
@@ -120,6 +131,7 @@ void sjf(Process* processes, int numberOfProcesses, int runFor) {
 			if(processToInsert != NULL) {
 				// updates queue
 				printf("Time %d: %s arrived\n", cycle, processToInsert -> name);
+				arrival_time[processToInsert -> index] = cycle;
 				priorityEnqueue(processToInsert);
 				if(strcmp(front -> name, processToInsert -> name) == 0){
 					printf("Time %d: %s selected (burst %d)\n", cycle, front -> name, front -> burst);
@@ -134,6 +146,7 @@ void sjf(Process* processes, int numberOfProcesses, int runFor) {
 		}
 		if(front -> burst == 0){
 			printf("Time %d: %s finished\n", cycle, front -> name);
+			finished_time[front -> index] = cycle;
 			priorityDequeue();
 			if(front != NULL)
 				printf("Time %d: %s selected (burst %d)\n", cycle, front -> name, front -> burst);
@@ -149,7 +162,22 @@ void sjf(Process* processes, int numberOfProcesses, int runFor) {
 
 		(front -> burst)--;
 	}
-	char* finished = front == NULL ? "Finished": "Not finished";
-	printf("%s at time %d\n", finished, cycle);
+	finished = front == NULL ? "Finished": "Not finished";
+	printf("%s at time %d\n\n", finished, cycle);
+
+	// printing the wait and turnaround times for all processes that finished
+	for(i = 0; i < numberOfProcesses; i++) {
+		//printf("Arrival time of %s: %d  Finish time: %d\n",processes[i].name,arrival_time[i],finished_time[i]);
+		if(arrival_time[i] != -1 && finished_time[i] != -1)
+		{
+			turnaround_time = finished_time[i] - arrival_time[i];
+			wait_time = turnaround_time - processes[i].burst;
+
+			printf("%s wait %d turnaround %d\n"
+	 		,processes[i].name
+	 		,wait_time
+	 		,turnaround_time);
+		}
+	}
 	return;
 }

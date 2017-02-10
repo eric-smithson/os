@@ -77,7 +77,7 @@ int main(void)
 	}
 	else if(strcmp(typeOfScheduler,"sjf") == 0)
 	{
-		printf("running sjf:\n"); // DEBUG
+		// printf("running sjf:\n"); // DEBUG
 		sjf(processes,numberOfProcesses,totalRunTime);
 	}
 	else if(strcmp(typeOfScheduler,"rr") == 0)
