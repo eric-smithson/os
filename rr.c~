@@ -79,7 +79,7 @@ void dequeueRoundRobin(Process* process_done)
 }
 
 
-void runRoundRobin(Process* processArray,int sizeOfProcessArray,int totalRunTime, int quantum,FILE* fpr)
+void runRoundRobin(Process* processArray,int sizeOfProcessArray,int totalRunTime, int quantum)
 {
 	int time = 0; // counter acts like a clock, counting up until totalRunTime
 	front = rear = NULL;

@@ -87,7 +87,7 @@ Process* findNewProcess(Process* processes, int numberOfProcesses, int cycle) {
 	return NULL;
 }
 
-void printqueue(FILE* fpr) {
+void printqueue() {
 	if(front == NULL)
 		return;
 

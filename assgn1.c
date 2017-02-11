@@ -6,6 +6,7 @@
 
 int main(void)
 {
+	FILE *fpr;
 	Process *processes;
 	char buffer[255];
 	FILE *fp;
@@ -18,7 +19,7 @@ int main(void)
 	int timeQuantum;
 	char** inputStrings;
 	int i = 0;
-	
+	fpr = fopen("./processes.out","w");
 	if(fgets(buffer,sizeof buffer, fp)!= NULL)
 	{
 		token = strtok(buffer," ");
@@ -71,22 +72,22 @@ int main(void)
 	qsort(processes, numberOfProcesses, sizeof(Process), compare_arrival);
 	if(strcmp(typeOfScheduler,"fcfs") == 0)
 	{
-		//printf("in assgn1 main else if statments\n");
-		runFcfs(processes,numberOfProcesses,totalRunTime);
+
+		runFcfs(processes,numberOfProcesses,totalRunTime,fpr);
 	}
 	else if(strcmp(typeOfScheduler,"sjf") == 0)
 	{
 		// printf("running sjf:\n"); // DEBUG
-		sjf(processes,numberOfProcesses,totalRunTime);
+		sjf(processes,numberOfProcesses,totalRunTime,fpr);
 	}
 	else if(strcmp(typeOfScheduler,"rr") == 0)
 	{
 		//printf("in assgn1 main else if statments\n");
-		runRoundRobin(processes,numberOfProcesses,totalRunTime,timeQuantum);
+		runRoundRobin(processes,numberOfProcesses,totalRunTime,timeQuantum,fpr);
 	}
 	else
 	{
-		printf("unrecognized task, exiting....");
+		fprintf(fpr,"unrecognized task, exiting....");
 		free(typeOfScheduler);
 		for(i = 0 ; i < numberOfProcesses;i++)
 		{
@@ -97,6 +98,7 @@ int main(void)
 	}
 	free(typeOfScheduler);
 	fclose(fp);
+	fclose(fpr);
 }
 
 

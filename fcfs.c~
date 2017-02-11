@@ -80,7 +80,7 @@ void enqueue(Process* process)
 {
 	if(process == NULL)
 	{
-		printf("Process doesnt exist");
+		fprintf(fpr,"Process doesnt exist");
 		return;
 	}
 	Process *temp = malloc(sizeof(Process));
