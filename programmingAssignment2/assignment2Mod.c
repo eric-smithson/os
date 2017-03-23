@@ -25,7 +25,7 @@ MODULE_DESCRIPTION("Assignment 2");  ///< The description -- see modinfo
 MODULE_VERSION("0.1");            ///< A version number to inform users
 
 static int    majorNumber;                  ///< Stores the device number -- determined automatically
-static char   message[256] = {0};           ///< Memory for the string that is passed from userspace
+static char   message[1024] = {0};           ///< Memory for the string that is passed from userspace
 static short  size_of_message;              ///< Used to remember the size of the string stored
 static int    numberOpens = 0;              ///< Counts the number of times the device is opened
 static struct class*  ebbcharClass  = NULL; ///< The device-driver class struct pointer
@@ -49,6 +49,11 @@ static struct file_operations fops =
    .release = dev_release,
 };
 
+typedef struct node
+{
+   char c;
+   Struct* next;
+}node;
 /** @brief The LKM initialization function
  *  The static keyword restricts the visibility of the function to within this C file. The __init
  *  macro means that for a built-in driver (not a LKM) the function is only used at initialization
@@ -56,15 +61,15 @@ static struct file_operations fops =
  *  @return returns 0 if successful
  */
 static int __init ebbchar_init(void){
-   printk(KERN_INFO "EBBChar: Initializing the EBBChar LKM\n");
+   printk(KERN_INFO "group42: Initializing the group42 LKM\n");
 
    // Try to dynamically allocate a major number for the device -- more difficult but worth it
    majorNumber = register_chrdev(0, DEVICE_NAME, &fops);
    if (majorNumber<0){
-      printk(KERN_ALERT "EBBChar failed to register a major number\n");
+      printk(KERN_ALERT "group42 failed to register a major number\n");
       return majorNumber;
    }
-   printk(KERN_INFO "EBBChar: registered correctly with major number %d\n", majorNumber);
+   // printk(KERN_INFO "group42: registered correctly with major number %d\n", majorNumber);
 
    // Register the device class
    ebbcharClass = class_create(THIS_MODULE, CLASS_NAME);
@@ -73,7 +78,7 @@ static int __init ebbchar_init(void){
       printk(KERN_ALERT "Failed to register device class\n");
       return PTR_ERR(ebbcharClass);          // Correct way to return an error on a pointer
    }
-   printk(KERN_INFO "EBBChar: device class registered correctly\n");
+   printk(KERN_INFO "group42: device class registered correctly with major number :$d\n",majorNumber);
 
    // Register the device driver
    ebbcharDevice = device_create(ebbcharClass, NULL, MKDEV(majorNumber, 0), NULL, DEVICE_NAME);
@@ -83,7 +88,7 @@ static int __init ebbchar_init(void){
       printk(KERN_ALERT "Failed to create the device\n");
       return PTR_ERR(ebbcharDevice);
    }
-   printk(KERN_INFO "EBBChar: device class created correctly\n"); // Made it! device was initialized
+   printk(KERN_INFO "initialzed group42 driver\n"); // Made it! device was initialized
    return 0;
 }
 
@@ -96,7 +101,7 @@ static void __exit ebbchar_exit(void){
    class_unregister(ebbcharClass);                          // unregister the device class
    class_destroy(ebbcharClass);                             // remove the device class
    unregister_chrdev(majorNumber, DEVICE_NAME);             // unregister the major number
-   printk(KERN_INFO "EBBChar: Goodbye from the LKM!\n");
+   printk(KERN_INFO "deinitialized group42 driver\n");
 }
 
 /** @brief The device open function that is called each time the device is opened
