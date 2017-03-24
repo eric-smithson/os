@@ -15,8 +15,8 @@
 #include<string.h>
 #include<unistd.h>
 
-#define BUFFER_LENGTH 256               ///< The buffer length (crude but fine)
-static char receive[BUFFER_LENGTH];     ///< The receive buffer from the LKM
+#define BUFFER_LENGTH 1024               ///< The buffer length (crude but fine)
+static unsigned char receive[BUFFER_LENGTH];     ///< The receive buffer from the LKM
 
 int main(){
    int ret, fd;
@@ -27,7 +27,7 @@ int main(){
       perror("Failed to open the device...");
       return errno;
    }
-   printf("Type in a short string to send to the kernel module:\n");
+   printf("Type in a string to send to the kernel module:\n");
    scanf("%[^\n]%*c", stringToSend);                // Read in a string (with spaces)
    printf("Writing message to the device [%s].\n", stringToSend);
    ret = write(fd, stringToSend, strlen(stringToSend)); // Send the string to the LKM
@@ -40,7 +40,7 @@ int main(){
    getchar();
 
    printf("Reading from the device...\n");
-   ret = read(fd, receive, BUFFER_LENGTH);        // Read the response from the LKM
+   ret = read(fd, receive, 5);        // Read the response from the LKM
    if (ret < 0){
       perror("Failed to read the message from the device.");
       return errno;
