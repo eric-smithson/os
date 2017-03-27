@@ -277,10 +277,6 @@ static ssize_t dev_write(struct file *filep, const char *buffer, size_t len, lof
  */
 static int dev_release(struct inode *inodep, struct file *filep){
    printk(KERN_INFO "Group42: Device successfully closed\n");
-   while(front != NULL)
-   {
-   		dequeue();
-   }
    return 0;
 }
 
