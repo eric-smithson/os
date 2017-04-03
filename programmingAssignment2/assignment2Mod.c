@@ -70,6 +70,7 @@ int enqueue(unsigned char name)
 	  if(front == NULL && rear == NULL)
 	  {
 		front = rear = temp;
+		size_of_buffer++;
 		return 0;
 	  }
 
@@ -129,7 +130,7 @@ int isEmpty()
 {
 	if(front == NULL)
 	{
-		printk(KERN_INFO "THERE ARE NO MORE DATA");
+		//printk(KERN_INFO "THERE ARE NO MORE DATA");
 
 		return 1;
 	}
@@ -210,26 +211,28 @@ static int dev_open(struct inode *inodep, struct file *filep){
  */
 static ssize_t dev_read(struct file *filep, char *buffer, size_t len, loff_t *offset){
    int error_count = 0;
-   int i;
+   int i = 0;
    int size;
-   if(BUFFERSIZE - size_of_buffer > len)
+   if(size_of_buffer > len)
    {
-   		size = len +1;
+   		size = len;
    }
    else
    {
-   		size = BUFFERSIZE - size_of_buffer +1;
+   		size = size_of_buffer;
    		printk(KERN_INFO "Group42: Not enough data in buffer there is only %d byte in buffer \n",size_of_buffer);
-   		return 0;
-
    }
    unsigned char string[size];
    for(i = 0; i < size;i++)
    {
    	  if(!isEmpty())
-      	string[i] = dequeue();
+      		string[i] = dequeue();
+	  else 
+	{ //i ++;
+		break;
+	}
    }
-   	string[--i] = '\0';
+   	string[i] = '\0';
 
    // copy_to_user has the format ( * to, *from, size) and returns 0 on success
    error_count = copy_to_user(buffer, string, size);
@@ -255,6 +258,7 @@ static ssize_t dev_read(struct file *filep, char *buffer, size_t len, loff_t *of
  */
 static ssize_t dev_write(struct file *filep, const char *buffer, size_t len, loff_t *offset)
 {
+
 	int i;
 	for (i=0;i<len;i++)
 	{
@@ -265,7 +269,7 @@ static ssize_t dev_write(struct file *filep, const char *buffer, size_t len, lof
 
    //sprintf(message, "%s(%zu letters)", buffer, len);   // appending received string with its length
    //size_of_message = strlen(message);                 // store the length of the stored message
-   printk(KERN_INFO "Group42: Character device successfully written\n");
+   	printk(KERN_INFO "Group42: Character device successfully written\n");
 
    return i;
 }
