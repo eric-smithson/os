@@ -187,7 +187,13 @@ static void __exit ebbchar_exit(void){
    class_unregister(ebbcharClass);                          // unregister the device class
    class_destroy(ebbcharClass);                             // remove the device class
    unregister_chrdev(majorNumber, DEVICE_NAME);             // unregister the major number
-   //printk(KERN_INFO "deinitialized group42 driver\n");
+
+   while(!isEmpty())
+	{
+
+		dequeue();
+	}
+   printk(KERN_INFO "deinitialized group42 driver\n");
 }
 
 /** @brief The device open function that is called each time the device is opened
