@@ -1,6 +1,7 @@
 #include <linux/init.h>           
 #include <linux/module.h>         
 #include <linux/device.h>         
+#include <linux/mutex.h>         
 #include <linux/kernel.h>         
 #include <linux/fs.h>             
 #include <asm/uaccess.h>   
@@ -21,7 +22,8 @@ static struct class*  ebbcharClass  = NULL; ///< The device-driver class struct 
 static struct device* ebbcharDevice = NULL; ///< The device-driver device struct pointer
 static int    size_of_buffer = 0;
 
-
+// Mutex Stuff
+extern DEFINE_MUTEX(ebbchar_mutex);
 
 // The prototype functions for the character driver -- must come before the struct definition
 static int     dev_open(struct inode *, struct file *);
@@ -43,11 +45,6 @@ static struct file_operations fops =
    .write = dev_write,
    .release = dev_release,
 };
-
-
-
-
-
 
 
 /** @brief The LKM initialization function
@@ -94,6 +91,7 @@ static int __init ebbchar_init(void){
  *  code is used for a built-in driver (not a LKM) that this function is not required.
  */
 static void __exit ebbchar_exit(void){
+	mutex_destroy(&ebbchar_mutex);
    device_destroy(ebbcharClass, MKDEV(majorNumber, 0));     // remove the device
    class_unregister(ebbcharClass);                          // unregister the device class
    class_destroy(ebbcharClass);                             // remove the device class
@@ -113,6 +111,11 @@ static void __exit ebbchar_exit(void){
  *  @param filep A pointer to a file object (defined in linux/fs.h)
  */
 static int dev_open(struct inode *inodep, struct file *filep){
+   if(!mutex_trylock(&ebbchar_mutex)){    /// Try to acquire the mutex (i.e., put the lock on/down)
+                                          /// returns 1 if successful and 0 if there is contention
+      printk(KERN_ALERT "Group42Read: Device in use by another process");
+      return -EBUSY;
+   }	
    numberOpens++;
    printk(KERN_INFO "Group42Read: Character device has been opened\n");
    return 0;
@@ -189,7 +192,8 @@ static ssize_t dev_write(struct file *filep, const char *buffer, size_t len, lof
  *  @param inodep A pointer to an inode object (defined in linux/fs.h)
  *  @param filep A pointer to a file object (defined in linux/fs.h)
  */
-static int dev_release(struct inode *inodep, struct file *filep){
+static int dev_release(struct inode *inodep, struct file *filep) {
+	mutex_unlock($ebbchar_mutex);
    printk(KERN_INFO "Group42Read: Device successfully closed\n");
    return 0;
 }

@@ -1,6 +1,7 @@
 #include <linux/init.h>           
 #include <linux/module.h>         
 #include <linux/device.h>         
+#include <linux/mutex.h>         
 #include <linux/kernel.h>         
 #include <linux/fs.h>             
 #include <asm/uaccess.h>   
@@ -31,6 +32,11 @@ g42Node* rear;
 //node* temp;
 g42Node* front;
 
+// Mutex
+static DEFINE_MUTEX(ebbchar_mutex);  /// A macro that is used to declare a new mutex that is visible in this file
+                                     /// results in a semaphore variable ebbchar_mutex with value 1 (unlocked)
+                                     /// DEFINE_MUTEX_LOCKED() results in a variable with value 0 (locked)
+
 // The prototype functions for the character driver -- must come before the struct definition
 static int     dev_open(struct inode *, struct file *);
 static int     dev_release(struct inode *, struct file *);
@@ -55,8 +61,6 @@ static struct file_operations fops =
    .write = dev_write,
    .release = dev_release,
 };
-
-
 
 int getSize(void)
 {
@@ -91,7 +95,6 @@ int enqueue(unsigned char name)
 		return -1;
 	}
 
-
 	return 0;
 }
 
@@ -117,14 +120,12 @@ unsigned char dequeue()
 		}
 		else
 		{
-
 			temp = temp->nextNode;
 			front->nextNode = NULL;
 			//free(front->name);
 			kfree(front);
 			front = temp;
 			//fprintf(fpr,"sucessful dequeue\n");
-
 		}
 	}
 	
@@ -182,6 +183,9 @@ static int __init ebbchar_init(void){
 
    front = rear = NULL;
 
+   // Mutex Stuff
+   mutex_init(&ebbchar_mutex);
+
    printk(KERN_INFO "initialzed group42Write driver\n"); // Made it! device was initialized
    return 0;
 }
@@ -191,6 +195,7 @@ static int __init ebbchar_init(void){
  *  code is used for a built-in driver (not a LKM) that this function is not required.
  */
 static void __exit ebbchar_exit(void){
+	mutex_destroy(&ebbchar_mutex);									// destroy the dynamically-allocated mutex
    device_destroy(ebbcharClass, MKDEV(majorNumber, 0));     // remove the device
    class_unregister(ebbcharClass);                          // unregister the device class
    class_destroy(ebbcharClass);                             // remove the device class
@@ -198,7 +203,6 @@ static void __exit ebbchar_exit(void){
 
    while(!isEmpty())
 	{
-
 		dequeue();
 	}
    printk(KERN_INFO "deinitialized group42Write driver\n");
@@ -210,6 +214,12 @@ static void __exit ebbchar_exit(void){
  *  @param filep A pointer to a file object (defined in linux/fs.h)
  */
 static int dev_open(struct inode *inodep, struct file *filep){
+   if(!mutex_trylock(&ebbchar_mutex)){    /// Try to acquire the mutex (i.e., put the lock on/down)
+                                          /// returns 1 if successful and 0 if there is contention
+      printk(KERN_ALERT "group42Write: Device in use by another process");
+      return -EBUSY;
+   } 
+   
    numberOpens++;
    printk(KERN_INFO "group42Write: Character device has been opened\n");
    return 0;
@@ -264,6 +274,7 @@ static ssize_t dev_write(struct file *filep, const char *buffer, size_t len, lof
  *  @param filep A pointer to a file object (defined in linux/fs.h)
  */
 static int dev_release(struct inode *inodep, struct file *filep){
+	mutex_unlock(&ebbchar_mutex);
    printk(KERN_INFO "Group42Write: Device successfully closed\n");
    return 0;
 }
