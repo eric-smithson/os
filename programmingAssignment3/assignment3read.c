@@ -24,6 +24,7 @@ static int    size_of_buffer = 0;
 
 // Mutex Stuff
 extern DEFINE_MUTEX(ebbchar_mutex);
+// extern pthread_mutex_t ebbchar_mutex
 
 // The prototype functions for the character driver -- must come before the struct definition
 static int     dev_open(struct inode *, struct file *);
@@ -193,7 +194,7 @@ static ssize_t dev_write(struct file *filep, const char *buffer, size_t len, lof
  *  @param filep A pointer to a file object (defined in linux/fs.h)
  */
 static int dev_release(struct inode *inodep, struct file *filep) {
-	mutex_unlock($ebbchar_mutex);
+	mutex_unlock(&ebbchar_mutex);
    printk(KERN_INFO "Group42Read: Device successfully closed\n");
    return 0;
 }
